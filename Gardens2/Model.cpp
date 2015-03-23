@@ -20,7 +20,7 @@ void Model::run(std::string date, std::string session, std::string district)
 	std::cout << "Link created ... " << std::endl;
 	sys.calculateDistribution();
 	std::cout << "Calculation Complete" << std::endl;
-	//save(date, session, district);
+	save(date, session, district);
 	/*std::vector<Link*> test;
 	for (auto & garden : sys.gardens)
 		if (garden->id == "55")
