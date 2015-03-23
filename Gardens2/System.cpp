@@ -7,7 +7,7 @@
 double deg2rad(double deg) { return (deg * pi/ 180); }
 double rad2deg(double rad) { return (rad * 180 / pi); }
 
-double getProbaFromDistance(double dist)
+double probaFromDistance(double dist)
 {
 	return 1 - dist / (dist + 300);
 }
@@ -59,38 +59,28 @@ void System::createLinks()
 	std::sort(gardens.begin(), gardens.end(), compareGardens);
 
 	std::cout << "Phase 2 ..." << std::endl;
-	auto garden = gardens.begin();
-	for (;;)
+
+	for (int linkCount = 0; linkCount < houses.size(); linkCount++)
 	{
-		if ((*garden)->unusedCapacity != 0)
-			for (auto link : (*garden)->links)
-				if (link->house->childrenWithNoGardenCount != 0)
-				{
-					int transfer = ((*garden)->unusedCapacity < link->house->childrenWithNoGardenCount)
-						? (*garden)->unusedCapacity : link->house->childrenWithNoGardenCount;
-					(*garden)->unusedCapacity -= transfer;
-					link->house->childrenWithNoGardenCount -= transfer;
-					link->childrenCount += transfer;
-					break;
-				}
-
-		garden++;
-		if (garden == gardens.end())
+		for (auto garden : gardens)
 		{
-			int totalUnusedCapacity = 0;
-			for (auto & garden : gardens)
-				totalUnusedCapacity += garden->unusedCapacity;
-			int totalChildrenWithNoGardenCount = 0;
-			for (auto & house : houses)
-				totalChildrenWithNoGardenCount += house->childrenWithNoGardenCount;
+			Link* link = garden->links[linkCount];
 
-			if (totalUnusedCapacity == 0 || totalChildrenWithNoGardenCount == 0) 
-				break;
+			double maxLinkTransfer = link->house->childrenCount 
+				* probaFromDistance(link->distance);
 
-			garden = gardens.begin();
+			double transfer = (garden->availability < maxLinkTransfer)
+				? garden->availability : maxLinkTransfer;
+
+			transfer = (transfer > minimalTransfer) ? transfer : 0;
+
+			transfer *= link->house->availability / link->house->childrenCount;
+
+			link->availability = transfer;
+			garden->availability -= link->availability;
+			link->house->availability -= link->availability;
 		}
 	}
-
 
 }
 
@@ -105,11 +95,11 @@ void System::calculateDistribution()
 		double weightSum = 0;
 		for (auto & link : garden->links)
 		{
-			distSum += link->distance * link->childrenCount;
-			weightSum += link->childrenCount;
+			distSum += link->distance * link->availability;
+			weightSum += link->availability;
 
-			link->house->distSum += link->distance * link->childrenCount;
-			link->house->weightSum += link->childrenCount;
+			link->house->distSum += link->distance * link->availability;
+			link->house->weightSum += link->availability;
 		}
 		overallDistSum += distSum;
 		garden->weightedAvgDistance = (weightSum == 0) ? 0 : distSum / weightSum;
@@ -138,14 +128,14 @@ void System::calculateDistribution()
 		for (auto & link : garden->links)
 		{
 			overallLocalDeviation += (weightedAvgDistance - link->distance)*
-				(weightedAvgDistance - link->distance) * link->childrenCount;
+				(weightedAvgDistance - link->distance) * link->availability;
 			localDeviation += (garden->weightedAvgDistance - link->distance)*
-				(garden->weightedAvgDistance - link->distance) * link->childrenCount;
+				(garden->weightedAvgDistance - link->distance) * link->availability;
 
 			link->house->localDeviation += (link->house->weightedAvgDistance - link->distance)*
-				(link->house->weightedAvgDistance - link->distance) * link->childrenCount;
+				(link->house->weightedAvgDistance - link->distance) * link->availability;
 
-			weightSum += link->childrenCount;
+			weightSum += link->availability;
 		}
 		garden->weightedAvgDistanceUniformity
 			= (weightSum == 0) ? 0 : sqrt(localDeviation / weightSum);

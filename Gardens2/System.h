@@ -26,7 +26,7 @@ struct Garden
 	std::string id;
 	Coordinates coordinates;
 	int capacity;
-	int unusedCapacity;
+	double availability;
 	std::vector<Link*> links;
 	double avgDistance = 0;
 	double weightedAvgDistance = 0;
@@ -36,7 +36,7 @@ struct Garden
 		: id(id_),
 		coordinates(coordinates_),
 		capacity(capacity_),
-		unusedCapacity(capacity_)
+		availability(capacity_)
 	{}
 
 	bool operator > (Garden const& b) { return avgDistance < b.avgDistance; }
@@ -62,15 +62,15 @@ struct House
 	double localDeviation = 0;
 
 	int childrenCount;
-	int childrenWithNoGardenCount;
+	double availability;
 
 	std::vector<Link*> links;
 
 	House(std::string id_, Coordinates coordinates_, int childrenCount_)
 		: id(id_),
 		coordinates(coordinates_),
-		childrenCount(childrenCount_), 
-		childrenWithNoGardenCount(childrenCount_)
+		childrenCount(childrenCount_),
+		availability(childrenCount_)
 	{}
 
 private:
@@ -88,11 +88,11 @@ struct Link
 {
 	Garden * garden;
 	House * house;
-	int childrenCount = 0;
+	double availability = 0;
 	double distance = 0;
 
-	Link(Garden* garden_, House* house_, int childrenCount_)
-		: garden(garden_), house(house_), childrenCount(childrenCount_)
+	Link(Garden* garden_, House* house_, double availability_)
+		: garden(garden_), house(house_), availability(availability_)
 		, distance(::distance(garden, house))
 	{}
 
@@ -112,6 +112,8 @@ struct System
 	double weightedAvgDistance = 0;
 	double weightedAvgDistanceUniformity = 0;
 	double sufficiency = 0;
+
+	double minimalTransfer = 0.01;
 
 	void createLinks();
 	void calculateDistribution();
