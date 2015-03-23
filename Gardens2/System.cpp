@@ -1,11 +1,16 @@
 #include "System.h"
 #include<math.h>
 #include <algorithm>
-sss
+
 #define pi 3.14159265358979323846
 
 double deg2rad(double deg) { return (deg * pi/ 180); }
 double rad2deg(double rad) { return (rad * 180 / pi); }
+
+double getProbaFromDistance(double dist)
+{
+	return 1 - dist / (dist + 300);
+}
 
 double distance(Coordinates & a, Coordinates & b)
 {

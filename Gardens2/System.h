@@ -6,6 +6,7 @@ struct Coordinates
 {
 	double longitude;
 	double latitude;
+
 	Coordinates(double longitude_, double latitude_)
 		: longitude(longitude_), latitude(latitude_)
 	{
