@@ -169,6 +169,19 @@ void Model::save(std::string date, std::string session, std::string district)
 			prepStmt->execute();
 		}
 
+		paramId = "33";
+		stmt->executeUpdate("DELETE FROM d_values WHERE param_id=" + paramId + " AND date='" + date + "' AND session_id='" + session + "'");
+		prepStmt = con->prepareStatement("INSERT INTO d_values(object_id, param_id, value, date, session_id) VALUES (?, ?, ?, ?, ?)");
+		for (auto house : sys.houses)
+		{
+			prepStmt->setString(1, house->id);
+			prepStmt->setString(2, paramId);
+			prepStmt->setDouble(3, probaFromDistance(house->weightedAvgDistance));
+			prepStmt->setString(4, date);
+			prepStmt->setString(5, session);
+			prepStmt->execute();
+		}
+
 		paramId = "30";
 		stmt->executeUpdate("DELETE FROM d_values WHERE param_id=" + paramId + " AND date='" + date + "' AND session_id='" + session + "'");
 		prepStmt = con->prepareStatement("INSERT INTO d_values(object_id, param_id, value, date, session_id) VALUES (?, ?, ?, ?, ?)");
@@ -177,6 +190,19 @@ void Model::save(std::string date, std::string session, std::string district)
 			prepStmt->setString(1, house->id);
 			prepStmt->setString(2, paramId);
 			prepStmt->setDouble(3, house->weightedAvgDistanceUniformity);
+			prepStmt->setString(4, date);
+			prepStmt->setString(5, session);
+			prepStmt->execute();
+		}
+
+		paramId = "34";
+		stmt->executeUpdate("DELETE FROM d_values WHERE param_id=" + paramId + " AND date='" + date + "' AND session_id='" + session + "'");
+		prepStmt = con->prepareStatement("INSERT INTO d_values(object_id, param_id, value, date, session_id) VALUES (?, ?, ?, ?, ?)");
+		for (auto house : sys.houses)
+		{
+			prepStmt->setString(1, house->id);
+			prepStmt->setString(2, paramId);
+			prepStmt->setDouble(3, probaFromDistance(house->weightedAvgDistanceUniformity));
 			prepStmt->setString(4, date);
 			prepStmt->setString(5, session);
 			prepStmt->execute();
@@ -195,6 +221,19 @@ void Model::save(std::string date, std::string session, std::string district)
 			prepStmt->execute();
 		}
 
+		paramId = "35";
+		stmt->executeUpdate("DELETE FROM d_values WHERE param_id=" + paramId + " AND date='" + date + "' AND session_id='" + session + "'");
+		prepStmt = con->prepareStatement("INSERT INTO d_values(object_id, param_id, value, date, session_id) VALUES (?, ?, ?, ?, ?)");
+		for (auto garden : sys.gardens)
+		{
+			prepStmt->setString(1, garden->id);
+			prepStmt->setString(2, paramId);
+			prepStmt->setDouble(3, probaFromDistance(garden->weightedAvgDistance));
+			prepStmt->setString(4, date);
+			prepStmt->setString(5, session);
+			prepStmt->execute();
+		}
+
 		paramId = "28";
 		stmt->executeUpdate("DELETE FROM d_values WHERE param_id=" + paramId + " AND date='" + date + "' AND session_id='" + session + "'");
 		prepStmt = con->prepareStatement("INSERT INTO d_values(object_id, param_id, value, date, session_id) VALUES (?, ?, ?, ?, ?)");
@@ -203,6 +242,19 @@ void Model::save(std::string date, std::string session, std::string district)
 			prepStmt->setString(1, garden->id);
 			prepStmt->setString(2, paramId);
 			prepStmt->setDouble(3, garden->weightedAvgDistanceUniformity);
+			prepStmt->setString(4, date);
+			prepStmt->setString(5, session);
+			prepStmt->execute();
+		}
+
+		paramId = "36";
+		stmt->executeUpdate("DELETE FROM d_values WHERE param_id=" + paramId + " AND date='" + date + "' AND session_id='" + session + "'");
+		prepStmt = con->prepareStatement("INSERT INTO d_values(object_id, param_id, value, date, session_id) VALUES (?, ?, ?, ?, ?)");
+		for (auto garden : sys.gardens)
+		{
+			prepStmt->setString(1, garden->id);
+			prepStmt->setString(2, paramId);
+			prepStmt->setDouble(3, probaFromDistance(garden->weightedAvgDistanceUniformity));
 			prepStmt->setString(4, date);
 			prepStmt->setString(5, session);
 			prepStmt->execute();
@@ -228,12 +280,32 @@ void Model::save(std::string date, std::string session, std::string district)
 		prepStmt->setString(5, session);
 		prepStmt->execute();
 
+		paramId = "37";
+		stmt->executeUpdate("DELETE FROM d_values WHERE param_id=" + paramId + " AND date='" + date + "' AND session_id='" + session + "'");
+		prepStmt = con->prepareStatement("INSERT INTO d_values(object_id, param_id, value, date, session_id) VALUES (?, ?, ?, ?, ?)");
+		prepStmt->setString(1, district);
+		prepStmt->setString(2, paramId);
+		prepStmt->setDouble(3, probaFromDistance(sys.weightedAvgDistance));
+		prepStmt->setString(4, date);
+		prepStmt->setString(5, session);
+		prepStmt->execute();
+
 		paramId = "26";
 		stmt->executeUpdate("DELETE FROM d_values WHERE param_id=" + paramId + " AND date='" + date + "' AND session_id='" + session + "'");
 		prepStmt = con->prepareStatement("INSERT INTO d_values(object_id, param_id, value, date, session_id) VALUES (?, ?, ?, ?, ?)");
 		prepStmt->setString(1, district);
 		prepStmt->setString(2, paramId);
 		prepStmt->setDouble(3, sys.weightedAvgDistanceUniformity);
+		prepStmt->setString(4, date);
+		prepStmt->setString(5, session);
+		prepStmt->execute();
+
+		paramId = "38";
+		stmt->executeUpdate("DELETE FROM d_values WHERE param_id=" + paramId + " AND date='" + date + "' AND session_id='" + session + "'");
+		prepStmt = con->prepareStatement("INSERT INTO d_values(object_id, param_id, value, date, session_id) VALUES (?, ?, ?, ?, ?)");
+		prepStmt->setString(1, district);
+		prepStmt->setString(2, paramId);
+		prepStmt->setDouble(3, probaFromDistance(sys.weightedAvgDistanceUniformity));
 		prepStmt->setString(4, date);
 		prepStmt->setString(5, session);
 		prepStmt->execute();

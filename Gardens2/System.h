@@ -15,6 +15,7 @@ struct Coordinates
 };
 
 double distance(Coordinates &, Coordinates &);
+double probaFromDistance(double dist);
 
 struct Garden;
 struct House;
